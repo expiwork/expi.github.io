@@ -5,6 +5,7 @@ import { defaultMetadata } from "./metadata";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { GoogleTagManager, GoogleAnalytics } from "@next/third-parties/google";
+import { EidiBanner } from "@/components/EidiBanner";
 
 const vazirmatn = Vazirmatn({ subsets: ["arabic"], variable: "--font-vazir" });
 
@@ -78,6 +79,7 @@ export default function RootLayout({
         </noscript>
         <GoogleAnalytics gaId="G-2Z2T81KZ7Y" />
         <GoogleTagManager gtmId="GTM-MQDDH462" />
+        <EidiBanner />
         <div className="flex min-h-screen flex-col">
           <Header />
           <main className="flex-1">{children}</main>
