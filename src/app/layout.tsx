@@ -4,8 +4,8 @@ import { Vazirmatn } from "next/font/google";
 import { defaultMetadata } from "./metadata";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import { GoogleTagManager, GoogleAnalytics } from "@next/third-parties/google";
 import { EidiBanner } from "@/components/EidiBanner";
+import Script from "next/script";
 
 const vazirmatn = Vazirmatn({ subsets: ["arabic"], variable: "--font-vazir" });
 
@@ -77,8 +77,15 @@ export default function RootLayout({
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
-        <GoogleAnalytics gaId="G-2Z2T81KZ7Y" />
-        <GoogleTagManager gtmId="GTM-MQDDH462" />
+        <Script id="clarity-script" strategy="afterInteractive">
+          {`
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "psrqccxle5");
+          `}
+        </Script>
         <EidiBanner />
         <div className="flex min-h-screen flex-col">
           <Header />
