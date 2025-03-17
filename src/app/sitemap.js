@@ -65,7 +65,7 @@ export default async function sitemap() {
   // Companies sitemap
   let companies = [];
   try {
-    companies = getAllCompanies();
+    companies = await getAllCompanies();
     const companyUrls = companies.map((company) => ({
       url: `${baseUrl}/company/${company.slug ?? company.id}`,
       lastModified,

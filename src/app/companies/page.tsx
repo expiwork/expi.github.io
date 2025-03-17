@@ -3,8 +3,8 @@ import CompaniesClient from "@/components/CompaniesClient";
 
 export const dynamic = "force-static";
 
-export default function CompaniesPage() {
-  const companies = getAllCompanies();
+export default async function CompaniesPage() {
+  const companies = await getAllCompanies();
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-muted/50">
