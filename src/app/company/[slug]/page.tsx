@@ -1,4 +1,3 @@
-import { getAllCompanies, getCompanyBySlug } from "@/data/companies";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,9 +9,13 @@ import { CompanyJsonLd } from "@/components/JsonLd";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Review } from "@/app/types/index";
+import {
+  getServerCompanies,
+  getServerCompanyBySlug,
+} from "@/utils/serverDataUtils";
 
-export function generateStaticParams() {
-  const companies = getAllCompanies();
+export async function generateStaticParams() {
+  const companies = await getServerCompanies();
   return companies.map((company) => ({
     slug: company.slug ? String(company.slug) : String(company.id),
   }));
@@ -107,7 +110,8 @@ export default async function CompanyPage({
   // Await the params if it's a Promise
   const actualParams = await params;
 
-  const company = await getCompanyBySlug(actualParams.slug);
+  // Get company data from the server-side function
+  const company = await getServerCompanyBySlug(actualParams.slug);
 
   if (!company) {
     notFound();
@@ -594,7 +598,7 @@ export async function generateMetadata({
   params: { slug: string };
 }): Promise<Metadata> {
   const actualParams = await params;
-  const company = await getCompanyBySlug(actualParams.slug);
+  const company = await getServerCompanyBySlug(actualParams.slug);
   if (!company) return {};
 
   const metadata = generateCompanyMetadata(company);

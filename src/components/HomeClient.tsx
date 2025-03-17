@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import CompanyCard from "@/components/CompanyCard";
 import {
   Pagination,
@@ -21,9 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter, useSearchParams } from "next/navigation";
-import ArchiveNotice from "@/components/ArchiveNotice";
 import Link from "next/link";
-import { companies } from "@/data/companies";
 
 const ITEMS_PER_PAGE = 32;
 
@@ -37,7 +35,7 @@ const sortOptions: SortOption[] = [
   {
     value: "reviews-desc",
     label: "بیشترین نظرات",
-    sortFn: (a, b) => (b.reviews?.length || 0) - (a.reviews?.length || 0),
+    sortFn: (a, b) => (b.total_review || 0) - (a.total_review || 0),
   },
   {
     value: "rating-desc",
@@ -58,22 +56,20 @@ const sortOptions: SortOption[] = [
     value: "newest",
     label: "جدیدترین",
     sortFn: (a, b) =>
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      new Date(b.created_at || "").getTime() -
+      new Date(a.created_at || "").getTime(),
   },
 ];
 
-// Pre-calculate total reviews once
-const totalReviews = companies.reduce(
-  (total, company) => total + (company.reviews?.length || 0),
-  0
-);
-
-// Pre-sort companies by default sort
-const defaultSortFn = (a: any, b: any) =>
-  (b.reviews?.length || 0) - (a.reviews?.length || 0);
-const initialSortedCompanies = [...companies].sort(defaultSortFn);
-
-export const HomeClient = () => {
+export function HomeClient({
+  data,
+}: {
+  data: {
+    companyCount: number;
+    featuredCompanies: any[];
+    allCompanies: any[]; // We'll add this to the server props
+  };
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -83,27 +79,26 @@ export const HomeClient = () => {
   const [searchQuery, setSearchQuery] = useState(
     () => searchParams.get("q") || ""
   );
-  const [searchResults, setSearchResults] = useState<typeof companies>(
-    initialSortedCompanies
-  );
+  const [searchResults, setSearchResults] = useState<any[]>(() => {
+    const sortByParam = searchParams.get("sort") || "reviews-desc";
+    const selectedSort = sortOptions.find((opt) => opt.value === sortByParam);
+    if (selectedSort) {
+      return [...data.allCompanies].sort(selectedSort.sortFn);
+    }
+    return data.allCompanies;
+  });
   const [sortBy, setSortBy] = useState<string>(
     () => searchParams.get("sort") || "reviews-desc"
   );
 
-  const getTotalReviews = () => {
-    return companies.reduce(
-      (total, company) => total + (company.reviews?.length || 0),
-      0
-    );
-  };
-
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       const normalizedQuery = query.toLowerCase().trim();
-      let filtered = companies.filter(
+      let filtered = data.allCompanies.filter(
         (company) =>
           company.name.toLowerCase().includes(normalizedQuery) ||
-          company.description.toLowerCase().includes(normalizedQuery)
+          (company.description &&
+            company.description.toLowerCase().includes(normalizedQuery))
       );
 
       const selectedSort = sortOptions.find((opt) => opt.value === sortBy);
@@ -114,7 +109,7 @@ export const HomeClient = () => {
       setSearchResults(filtered);
       setCurrentPage(1);
     }, 300),
-    [sortBy]
+    [sortBy, data.allCompanies]
   );
 
   const updateURL = useCallback(
@@ -162,7 +157,6 @@ export const HomeClient = () => {
   return (
     <main className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-black dark:to-gray-900">
       <div className="relative container mx-auto px-4 py-8 min-h-[100vh]">
-        {/* <ArchiveNotice /> */}
         <div className="flex flex-col items-center justify-center h-[40vh] text-center mb-12">
           <h1
             className="text-6xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-orange-500 h-20 leading-tight"
@@ -178,7 +172,7 @@ export const HomeClient = () => {
               className="text-4xl font-bold text-gray-800 dark:text-gray-200"
               style={{ fontDisplay: "swap" }}
             >
-              {totalReviews.toLocaleString("fa-IR")}
+              {data.companyCount.toLocaleString("fa-IR")}
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-4 py-1 rounded-full">
               تجربه ثبت شده
@@ -311,4 +305,4 @@ export const HomeClient = () => {
       </div>
     </main>
   );
-};
+}

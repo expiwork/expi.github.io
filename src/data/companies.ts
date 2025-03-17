@@ -1,12 +1,13 @@
-import companiesData from "../../cached-companies.json";
-import { Company } from "@/app/types";
+import {
+  getServerCompanies,
+  getServerCompanyBySlug,
+  getMinimizedCompanies,
+} from "@/utils/serverDataUtils";
 
-export const companies: Company[] = companiesData as Company[];
+// Export the server functions with the same names as before, so other code doesn't have to change
+export const getAllCompanies = getServerCompanies;
+export const getCompanyBySlug = getServerCompanyBySlug;
+export const getMinimizedCompaniesData = getMinimizedCompanies;
 
-export function getCompanyBySlug(slug: string): Company | undefined {
-  return companies.find((company) => company.slug === slug);
-}
-
-export function getAllCompanies(): Company[] {
-  return companies;
-}
+// Remove any direct imports of large JSON files
+// Remove any 'export const companies = [...]' that loads all data into the bundle
