@@ -38,7 +38,7 @@ export async function getMinimizedCompanies() {
     description: company.description || "",
     rate: company.rate,
     image: company.image,
-    total_review: company.total_review || company.reviews?.length || 0,
+    total_review: company.reviews?.length || 0,
     salary_min: company.salary_min || 0,
     salary_max: company.salary_max || 0,
     created_at: company.created_at,

@@ -67,7 +67,7 @@ export function HomeClient({
   data: {
     companyCount: number;
     featuredCompanies: any[];
-    allCompanies: any[]; // We'll add this to the server props
+    allCompanies: any[];
   };
 }) {
   const router = useRouter();
@@ -178,12 +178,12 @@ export function HomeClient({
               تجربه ثبت شده
             </div>
           </div>
-          <Link
+          {/* <Link
             href="/feed"
             className="text-orange-500 px-4 py-2 rounded-md mt-4 outline outline-2 outline-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-200 w-40 h-10 inline-flex items-center justify-center"
-          >
+          >s
             مشاهده تجربه ها
-          </Link>
+          </Link> */}
         </div>
 
         <div className="max-w-xl mx-auto mb-8">

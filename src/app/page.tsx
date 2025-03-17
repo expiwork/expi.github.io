@@ -7,14 +7,20 @@ async function getHomeData() {
   try {
     const minimizedCompanies = await getMinimizedCompanies();
 
+    const totalReviews = minimizedCompanies.reduce(
+      (sum, company) => sum + (company.total_review || 0),
+      0
+    );
+
     return {
-      companyCount: minimizedCompanies.length,
+      companyCount: totalReviews,
       featuredCompanies: minimizedCompanies.slice(0, 10).map((company) => ({
         id: company.id,
         name: company.name,
         rate: company.rate,
         total_review: company.total_review || 0,
         image: company.image || null,
+        slug: company.slug,
       })),
       allCompanies: minimizedCompanies,
     };
