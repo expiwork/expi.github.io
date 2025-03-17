@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { getAllReviewIds, getReviewById } from "@/data/reviews";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, Calendar, Briefcase, Building2, ArrowRight } from "lucide-react";
@@ -7,16 +6,20 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Metadata } from "next";
 import { formatDate, toPersianNumbers } from "@/lib/utils";
-import ArchiveNotice from "@/components/ArchiveNotice";
+import {
+  getServerReviewById,
+  getServerCompanies,
+} from "@/utils/serverDataUtils";
 
-// Generate metadata for the review page
+export const dynamic = "force-static";
+
 export async function generateMetadata({
   params,
 }: {
   params: { id: string };
 }): Promise<Metadata> {
   const param = await params.id;
-  const review = await getReviewById(Number(param));
+  const review = await getServerReviewById(Number(param));
 
   if (!review) return {};
 
@@ -39,11 +42,29 @@ export async function generateMetadata({
   };
 }
 
-// Add this function to generate static parameters for the review page
+// تولید مسیرهای استاتیک برای تمام نظرات
 export async function generateStaticParams() {
-  // Fetch all review IDs or any necessary parameters
-  const reviews = await getAllReviewIds(); // Ensure this returns string IDs
-  return reviews.map((id: string | number) => ({ id: String(id) })); // Convert id to string
+  try {
+    const companies = await getServerCompanies();
+    const allReviewIds = [];
+
+    // استخراج تمام شناسه‌های نظرات از تمام شرکت‌ها
+    for (const company of companies) {
+      if (company.reviews && Array.isArray(company.reviews)) {
+        for (const review of company.reviews) {
+          if (review && review.id) {
+            allReviewIds.push({ id: String(review.id) });
+          }
+        }
+      }
+    }
+
+    console.log(`Generated static paths for ${allReviewIds.length} reviews`);
+    return allReviewIds;
+  } catch (error) {
+    console.error("Error generating static params for reviews:", error);
+    return [];
+  }
 }
 
 export default async function ReviewPage({
@@ -52,7 +73,7 @@ export default async function ReviewPage({
   params: { id: string };
 }) {
   const param = await params.id;
-  const review = await getReviewById(Number(param));
+  const review = await getServerReviewById(Number(param));
 
   if (!review) {
     notFound();

@@ -19,7 +19,6 @@ export async function getServerCompanies() {
   }
 }
 
-// Server-side function to get company by slug
 export async function getServerCompanyBySlug(slug: string) {
   const companies = await getServerCompanies();
   return companies.find(
@@ -27,7 +26,6 @@ export async function getServerCompanyBySlug(slug: string) {
   );
 }
 
-// Server-side function to get minimized companies for listing
 export async function getMinimizedCompanies() {
   const companies = await getServerCompanies();
 
@@ -44,4 +42,20 @@ export async function getMinimizedCompanies() {
     created_at: company.created_at,
     verified: company.verified,
   }));
+}
+
+export async function getServerReviews() {
+  try {
+    const companies = await getServerCompanies();
+
+    return companies?.map((x) => x.reviews);
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    return [];
+  }
+}
+
+export async function getServerReviewById(id: number) {
+  const companies = await getServerCompanies();
+  return companies?.map((x) => x.reviews).find((x) => x.id === id);
 }

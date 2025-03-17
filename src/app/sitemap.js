@@ -1,21 +1,20 @@
-import { getAllCompanies } from "../data/companies";
-import { getAllReviewIds } from "../data/reviews";
-import * as fs from "fs";
-import * as path from "path";
+import fs from "fs";
+import path from "path";
+import { getServerCompanies, getServerReviews } from "@/utils/serverDataUtils";
 
 export const dynamic = "force-static";
 
-function generateSitemapXML(urls,types) {
+function generateSitemapXML(urls, type) {
   return `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       ${urls
         .map(
-          (entry) => `
+          (url) => `
         <url>
-          <loc>${entry.url}</loc>
-          <lastmod>${entry.lastModified}</lastmod>
-          <changefreq>${entry.changeFrequency}</changefreq>
-          <priority>${entry.priority}</priority>
+          <loc>${url.url}</loc>
+          <lastmod>${url.lastModified}</lastmod>
+          <changefreq>${url.changeFrequency}</changefreq>
+          <priority>${url.priority}</priority>
         </url>
       `
         )
@@ -65,7 +64,7 @@ export default async function sitemap() {
   // Companies sitemap
   let companies = [];
   try {
-    companies = await getAllCompanies();
+    companies = await getServerCompanies();
     const companyUrls = companies.map((company) => ({
       url: `${baseUrl}/company/${company.slug ?? company.id}`,
       lastModified,
@@ -83,14 +82,14 @@ export default async function sitemap() {
   }
 
   // Reviews sitemap
-  let reviewIds = [];
+  let reviews = [];
   try {
-    reviewIds = await getAllReviewIds();
-    const reviewUrls = reviewIds.map((id) => ({
-      url: `${baseUrl}/review/${id}`,
+    reviews = await getServerReviews();
+    const reviewUrls = reviews.map((review) => ({
+      url: `${baseUrl}/review/${review.id}`,
       lastModified,
       changeFrequency: "weekly",
-      priority: 0.6,
+      priority: 0.7,
     }));
 
     const reviewSitemapXml = generateSitemapXML(reviewUrls, 'reviews');
