@@ -40,7 +40,7 @@ export default function Header() {
         </Link>
 
         <div className="flex items-center ">
-          <NavigationMenu className="hidden md:flex">
+          {/* <NavigationMenu className="hidden md:flex">
             <NavigationMenuList className="flex gap-6">
               <NavigationMenuItem>
                 <Link href="/companies" legacyBehavior passHref>
@@ -50,7 +50,7 @@ export default function Header() {
                 </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
-          </NavigationMenu>
+          </NavigationMenu> */}
 
           <NavigationMenu className="hidden md:flex">
             <NavigationMenuList className="flex gap-6">
@@ -64,7 +64,7 @@ export default function Header() {
             </NavigationMenuList>
           </NavigationMenu>
 
-          <NavigationMenu className="hidden md:flex">
+          {/* <NavigationMenu className="hidden md:flex">
             <NavigationMenuList className="flex gap-6">
               <NavigationMenuItem>
                 <Link href="/feed" legacyBehavior passHref>
@@ -74,7 +74,7 @@ export default function Header() {
                 </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
-          </NavigationMenu>
+          </NavigationMenu> */}
 
           {/* <NavigationMenu className="hidden md:flex">
             <NavigationMenuList className="flex gap-6">
@@ -134,16 +134,16 @@ export default function Header() {
           <div className="absolute top-16 left-0 right-0 bg-background border-b md:hidden">
             <nav className="container px-6 py-4">
               <ul className="flex flex-col space-y-4">
-                <li>
+                {/* <li>
                   <Link href="/feed" className="block py-2 text-lg">
                     تجربه ها
                   </Link>
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                   <Link href="/companies" className="block py-2 text-lg">
                     شرکت ها
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link href="/blog" className="block py-2 text-lg">
                     وبلاگ

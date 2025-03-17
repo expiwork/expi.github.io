@@ -3,10 +3,8 @@ import { getMinimizedCompanies } from "@/utils/serverDataUtils";
 
 export const dynamic = "force-static";
 
-// This function runs at build time only
 async function getHomeData() {
   try {
-    // Use the server function instead of reading directly
     const minimizedCompanies = await getMinimizedCompanies();
 
     return {
