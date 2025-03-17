@@ -6,7 +6,7 @@ let companiesCache: any[] | null = null;
 
 // Server-side only function to get all companies
 export async function getServerCompanies() {
-  if (companiesCache) return companiesCache;
+  if (companiesCache?.length) return companiesCache;
 
   try {
     const dataPath = path.join(process.cwd(), "cached-companies.json");
