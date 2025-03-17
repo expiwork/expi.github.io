@@ -57,5 +57,8 @@ export async function getServerReviews() {
 
 export async function getServerReviewById(id: number) {
   const companies = await getServerCompanies();
-  return companies?.map((x) => x.reviews).find((x) => x.id === id);
+  return companies
+    ?.map((x) => x.reviews)
+    .flat()
+    .find((x) => x.id === id);
 }
